@@ -725,8 +725,8 @@ window.addEventListener('scroll',updateScrollBar,{passive:true});
 // AUTO-SCROLL ENGINE
 // =============================================
 // Scrolls section by section, pauses at each section for the content to breathe
-const SECTION_PAUSE_MS = 3800; // how long to linger on each section
-const SCROLL_SPEED_PX = 1.2;   // px per frame when gliding
+const SECTION_PAUSE_MS = 2000; // how long to linger on each section
+const SCROLL_SPEED_PX = 3;     // px per frame when gliding
 let isGliding = false;
 let targetScrollY = 0;
 let autoScrollRAF = null;
@@ -768,10 +768,12 @@ function scrollToNextSection(){
   });
 
   if(target === null){
-    // Reached the end — stop
+    // Reached the end — stop scroll and stop music
     autoScrolling = false;
     document.getElementById('autoscroll-btn').textContent='✓ Journey Complete';
     document.getElementById('autoscroll-btn').classList.add('paused');
+    // Fade out music gracefully
+    if(musicPlaying) stopMusic();
     return;
   }
 
@@ -788,7 +790,7 @@ function glideToTarget(){
     scheduleNextSection();
     return;
   }
-  const step = Math.sign(diff) * Math.min(Math.abs(diff)*0.04 + 1.5, 18);
+  const step = Math.sign(diff) * Math.min(Math.abs(diff)*0.09 + 3, 40);
   window.scrollBy(0, step);
   autoScrollRAF = requestAnimationFrame(glideToTarget);
 }
